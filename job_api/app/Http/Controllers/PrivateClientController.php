@@ -648,7 +648,7 @@ class PrivateClientController extends Controller
        
             foreach ($privateclient->jobs as $job) {
                 foreach ($job->applications as $application) {
-                    
+                    dd($application->jobseeker);
                     $allApplications[] = [
                         'application_id' => $application->id,
                         'job_title' => $job->title,
