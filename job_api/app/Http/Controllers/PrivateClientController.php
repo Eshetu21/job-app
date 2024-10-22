@@ -655,6 +655,7 @@ class PrivateClientController extends Controller
                     $allApplications[] = [
                         'application_id' => $application->id,
                         'job_title' => $job->title,
+<<<<<<< HEAD
                         'jobseeker' => [
                             'id' => $jobseeker ? $jobseeker->id : null,
                             'phone_number' => $jobseeker ? $jobseeker->phone_number : null,
@@ -665,6 +666,10 @@ class PrivateClientController extends Controller
                             'address' => $jobseekerUser ? $jobseekerUser->address : null,
 
                         ],
+=======
+                        'jobseeker' => $application->jobseeker,
+                        'user' => $application->jobseeker->user,
+>>>>>>> f3b7e31f9a2b497d0d585b0d751344164bba572d
                         'status' => $application->status,
                         'cover_letter' => url($application->cover_letter),
                         'cv' => url($application->cv),
