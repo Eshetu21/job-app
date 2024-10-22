@@ -209,37 +209,29 @@ class _CompanyHomepageState extends State<CompanyHomepage> {
                                           _profileController
                                                   .profiles["privateclient"] ==
                                               null)
-                                        Padding(
-                                          padding: EdgeInsets.all(20),
-                                          child: GestureDetector(
-                                            onTap: () {
-                                              Navigator.of(context).push(
-                                                  MaterialPageRoute(
-                                                      builder: (context) =>
-                                                          Profiles()));
-                                            },
+                                        GestureDetector(
+                                          onTap: () {
+                                            Navigator.of(context).push(
+                                                MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        Profiles()));
+                                          },
+                                          child: Padding(
+                                            padding: const EdgeInsets.all(15.0),
                                             child: Container(
-                                              margin: EdgeInsets.all(20),
+                                              width: 120,
+                                              height: 30,
+                                              decoration: BoxDecoration(
+                                                borderRadius:
+                                                    BorderRadius.circular(20),
+                                                color: Color(0xFF130160),
+                                              ),
                                               child: Center(
-                                                child: Container(
-                                                  padding: EdgeInsets.symmetric(
-                                                      horizontal: 80,
-                                                      vertical: 10),
-                                                  decoration: BoxDecoration(
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              20),
-                                                      color: Colors.grey
-                                                          .withOpacity(0.2)),
-                                                  child: Text("Add Account",
-                                                      style:
-                                                          GoogleFonts.poppins(
-                                                              color: Color(
-                                                                  0xFF130160),
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .w500)),
-                                                ),
+                                                child: Text("ADD ACCOUNT",
+                                                    style: GoogleFonts.poppins(
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                        color: Colors.white)),
                                               ),
                                             ),
                                           ),
@@ -249,25 +241,20 @@ class _CompanyHomepageState extends State<CompanyHomepage> {
                                           _userAuthenticationController
                                               .logout();
                                         },
-                                        child: Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          children: [
-                                            Icon(
-                                              Icons.logout_outlined,
-                                              color: Color(0xFF130160),
-                                            ),
-                                            Container(
-                                              decoration: BoxDecoration(
-                                                borderRadius:
-                                                    BorderRadius.circular(20),
-                                              ),
-                                              child: Text("LOG OUT",
-                                                  style: GoogleFonts.poppins(
-                                                      color:
-                                                          Color(0xFF130160))),
-                                            ),
-                                          ],
+                                        child: Container(
+                                          width: 100,
+                                          height: 30,
+                                          decoration: BoxDecoration(
+                                            borderRadius:
+                                                BorderRadius.circular(20),
+                                            color: Color(0xFF130160),
+                                          ),
+                                          child: Center(
+                                            child: Text("LOGOUT",
+                                                style: GoogleFonts.poppins(
+                                                    fontWeight: FontWeight.bold,
+                                                    color: Colors.white)),
+                                          ),
                                         ),
                                       ),
                                     ],

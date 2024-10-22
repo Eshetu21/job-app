@@ -16,12 +16,25 @@ class PrivateViewApplicant extends StatefulWidget {
 }
 
 class _PrivateViewApplicantState extends State<PrivateViewApplicant> {
+  @override
+  void initState() {
+    super.initState();
+  }
+
   Future<void> openPdf(String url) async {
-    Uri pdfUri = Uri.parse(url);
-    if (await canLaunchUrl(pdfUri)) {
-      await launchUrl(pdfUri);
-    } else {
-      throw "Couldn't launch url";
+    try {
+      Uri pdfUri = Uri.parse(url);
+      if (await canLaunchUrl(pdfUri)) {
+        await launchUrl(
+          pdfUri,
+          mode: LaunchMode.externalApplication,
+        );
+      }
+    } catch (e) {
+      print("Error launching PDF: $e");
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Could not open PDF file")),
+      );
     }
   }
 
@@ -160,55 +173,75 @@ class _PrivateViewApplicantState extends State<PrivateViewApplicant> {
                 ),
               ),
             ),
-            Card(
-              margin: EdgeInsets.symmetric(vertical: 10),
-              child: Padding(
-                padding: EdgeInsets.all(15),
-                child: Column(
-                  children: [
-                    Text("Hire",
-                        style: GoogleFonts.poppins(
-                            fontWeight: FontWeight.bold, fontSize: 20)),
-                    Divider(),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: [
-                        Container(
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(20),
-                              color: Colors.green),
-                          child: TextButton(
-                              onPressed: () {
-                                Navigator.of(context).push(MaterialPageRoute(
-                                    builder: (context) => PrivateAccept(
-                                        application: widget.application)));
-                              },
-                              child: Text("Accept",
-                                  style: GoogleFonts.poppins(
-                                      color: Colors.white))),
-                        ),
-                        Container(
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(20),
-                              color: Colors.red),
-                          child: TextButton(
-                              onPressed: () {
-                                Navigator.of(context).push(MaterialPageRoute(
-                                    builder: (context) => PrivateReject(
-                                        application: widget.application)));
-                              },
-                              child: Text("Reject",
-                                  style: GoogleFonts.poppins(
-                                      color: Colors.white))),
-                        ),
-                      ],
-                    )
-                  ],
-                ),
-              ),
-            ),
-            Text("CV: ${widget.application["cv"]}"),
-            Text("Cover letter: ${widget.application["cover_letter"]}"),
+            widget.application["status"] == "Pending"
+                ? Card(
+                    margin: EdgeInsets.symmetric(vertical: 10),
+                    child: Padding(
+                      padding: EdgeInsets.all(15),
+                      child: Column(
+                        children: [
+                          Text("Hire",
+                              style: GoogleFonts.poppins(
+                                  fontWeight: FontWeight.bold, fontSize: 20)),
+                          Divider(),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            children: [
+                              Container(
+                                decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(20),
+                                    color: Colors.green),
+                                child: TextButton(
+                                    onPressed: () {
+                                      Navigator.of(context).push(
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  PrivateAccept(
+                                                      application:
+                                                          widget.application)));
+                                    },
+                                    child: Text("Accept",
+                                        style: GoogleFonts.poppins(
+                                            color: Colors.white))),
+                              ),
+                              Container(
+                                decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(20),
+                                    color: Colors.red),
+                                child: TextButton(
+                                    onPressed: () {
+                                      Navigator.of(context).push(
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  PrivateReject(
+                                                      application:
+                                                          widget.application)));
+                                    },
+                                    child: Text("Reject",
+                                        style: GoogleFonts.poppins(
+                                            color: Colors.white))),
+                              ),
+                            ],
+                          )
+                        ],
+                      ),
+                    ),
+                  )
+                : Card(
+                    margin: EdgeInsets.symmetric(vertical: 10),
+                    child: Padding(
+                      padding: EdgeInsets.all(15),
+                      child: Column(
+                        children: [
+                          Text("Application Status",
+                              style: GoogleFonts.poppins(
+                                  fontWeight: FontWeight.bold, fontSize: 20)),
+                          Divider(),
+                          Text("Reviwed", style: GoogleFonts.poppins())
+                        ],
+                      ),
+                    ),
+                  ),
           ],
         ),
       ),

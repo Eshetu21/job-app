@@ -468,12 +468,12 @@ class PrivateClientController extends Controller
 
                 ], 400);
             }
-            if($app->status=="Rejected"){
+            if ($app->status == "Rejected") {
                 return response()->json([
                     "success" => false,
                     "message" => "Already Rejected",
-                    
-                ], 400);  
+
+                ], 400);
             }
             $validatedData = $request->validate([
                 'statement' => 'string',
@@ -484,7 +484,7 @@ class PrivateClientController extends Controller
                 'statement' => isset($validatedData["statement"]) ? $validatedData["statement"] : null,
                 'status' => "Rejected"
             ]);
-            Mail::to($app->jobseeker->email)->send(new RejectedMail($app->jobseeker->firstname,"Private Client",$app->job->title));
+            Mail::to($app->jobseeker->email)->send(new RejectedMail($app->jobseeker->firstname, "Private Client", $app->job->title));
             return response()->json([
                 "success" => true,
                 "message" => "Application Rejected",
@@ -495,9 +495,10 @@ class PrivateClientController extends Controller
             return response()->json([
                 "success" => false,
                 "message" => $e->errors(),
-              
 
-            ], 400);} catch (Exception $e) {
+
+            ], 400);
+        } catch (Exception $e) {
             return response()->json([
                 "success" => false,
                 "message" => $e->getMessage(),
@@ -515,32 +516,32 @@ class PrivateClientController extends Controller
                     "message" => "privateclient not registerd"
                 ], 400);
             }
-            
+
             $job = $user->privateclient->jobs->find($jobid);
-          
+
             if (!$job) {
                 return response()->json([
                     "success" => false,
                     "message" => "Job not found",
-                    
+
                 ], 400);
             }
-            
+
             $app = $job->applications->find($appid);
-           
+
             if (!$app) {
                 return response()->json([
                     "success" => false,
                     "message" => "Application not found",
-                    
+
                 ], 400);
             }
-            if($app->status=="Accepted"){
+            if ($app->status == "Accepted") {
                 return response()->json([
                     "success" => false,
                     "message" => "Already Accepted",
-                    
-                ], 400);  
+
+                ], 400);
             }
             $validatedData = $request->validate([
                 'statement' => 'required|string',
@@ -551,8 +552,8 @@ class PrivateClientController extends Controller
                 'statement' => $validatedData["statement"],
                 'status' => "Accepted"
             ]);
-            
-            Mail::to($app->jobseeker->email)->send(new AcceptedMail($app->jobseeker->firstname,"Private Client",$app->job->title));
+
+            Mail::to($app->jobseeker->email)->send(new AcceptedMail($app->jobseeker->firstname, "Private Client", $app->job->title));
             return response()->json([
                 "success" => true,
                 "message" => "Application Accepted",
@@ -563,13 +564,14 @@ class PrivateClientController extends Controller
             return response()->json([
                 "success" => false,
                 "message" => $e->errors(),
-              
 
-            ], 400);} catch (Exception $e) {
+
+            ], 400);
+        } catch (Exception $e) {
             return response()->json([
                 "success" => false,
                 "message" => $e->getMessage(),
-                "line"=>$e->getLine()
+                "line" => $e->getLine()
 
             ], 400);
         }
@@ -602,7 +604,7 @@ class PrivateClientController extends Controller
 
                 ], 400);
             }
-            $apps->transform(function ($a){
+            $apps->transform(function ($a) {
                 $a->cv = url($a->cv);
                 $a->cover_letter = url($a->cover_letter);
                 return $a;
@@ -629,30 +631,40 @@ class PrivateClientController extends Controller
 
     public function getAppsP(Request $request)
     {
-
         try {
-            $user =   $request->user();
-          
-            $privateclient = Privateclient::with('jobs.applications')->find($user->privateclient->id);
+            $user = $request->user();
 
-          
+            // Load jobs, applications, jobseeker, and user relationships
+            $privateclient = Privateclient::with('jobs.applications.jobseeker.user')->find($user->privateclient->id);
+
             if (!$privateclient) {
                 return response()->json([
                     "success" => false,
-                    "message" => "privateclient not registerd"
+                    "message" => "privateclient not registered"
                 ], 400);
             }
-    
+
             $allApplications = [];
-    
-       
+
+            // Loop through jobs and applications
             foreach ($privateclient->jobs as $job) {
                 foreach ($job->applications as $application) {
-                    dd($application->jobseeker);
+                    $jobseeker = $application->jobseeker;
+                    $jobseekerUser = $jobseeker ? $jobseeker->user : null;
+
                     $allApplications[] = [
                         'application_id' => $application->id,
                         'job_title' => $job->title,
-                        'jobseeker' => $application->jobseeker,
+                        'jobseeker' => [
+                            'id' => $jobseeker ? $jobseeker->id : null,
+                            'phone_number' => $jobseeker ? $jobseeker->phone_number : null,
+                            'about_me' => $jobseeker ? $jobseeker->about_me : null,
+                            'firstname' => $jobseekerUser ? $jobseekerUser->firstname : null,
+                            'lastname' => $jobseekerUser ? $jobseekerUser->lastname : null,
+                            'email' => $jobseekerUser ? $jobseekerUser->email : null,
+                            'address' => $jobseekerUser ? $jobseekerUser->address : null,
+
+                        ],
                         'status' => $application->status,
                         'cover_letter' => url($application->cover_letter),
                         'cv' => url($application->cv),
@@ -663,29 +675,26 @@ class PrivateClientController extends Controller
                     ];
                 }
             }
-    
-       
-        
+
             return response()->json([
                 "success" => true,
                 "applications" => $allApplications
-
             ], 200);
         } catch (ValidationException $e) {
             return response()->json([
                 "success" => false,
                 "message" => $e->errors(),
-
-
             ], 400);
         } catch (Exception $e) {
             return response()->json([
                 "success" => false,
                 "message" => $e->getMessage(),
-
             ], 400);
         }
     }
+
+
+
     public function getAppById(Request $request, $jobid, $appid)
     {
         try {
@@ -714,7 +723,7 @@ class PrivateClientController extends Controller
 
                 ], 400);
             }
-            $app->transform(function ($a){
+            $app->transform(function ($a) {
                 $a->cv = url($a->cv);
                 $a->cover_letter = url($a->cover_letter);
                 return $a;

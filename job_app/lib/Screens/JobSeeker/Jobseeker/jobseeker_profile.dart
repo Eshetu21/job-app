@@ -52,7 +52,8 @@ class _JobseekerProfileState extends State<JobseekerProfile> {
                       child: Column(
                         children: [
                           Container(
-                            margin: EdgeInsets.all(16),
+                            margin:
+                                EdgeInsets.only(top: 16, left: 16, right: 10),
                             width: double.infinity,
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
@@ -64,7 +65,7 @@ class _JobseekerProfileState extends State<JobseekerProfile> {
                                           borderRadius:
                                               BorderRadius.circular(20)),
                                       margin:
-                                          EdgeInsets.only(right: 20, top: 20),
+                                          EdgeInsets.only(right: 5, top: 20),
                                       padding: EdgeInsets.all(16),
                                       child: Row(
                                           mainAxisAlignment:

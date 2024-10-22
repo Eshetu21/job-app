@@ -41,7 +41,7 @@ class CompanyController extends Controller
                 $company_logo = $request->file('company_logo');
 
                 $originalfilename = $company_logo->getClientOriginalName();
-                $filename = time()."-".$user->id."-".$originalfilename;
+                $filename = time() . "-" . $user->id . "-" . $originalfilename;
                 $company_logo->move(public_path('uploads/company_logo'), $filename);
                 $validatedData["user_id"] = $user->id;
                 $validatedData["company_logo"] = 'uploads/company_logo/' . $filename;
@@ -124,7 +124,7 @@ class CompanyController extends Controller
                     File::delete($companyLogoPath);
                 }
                 $companyLogo = $request->file('company_logo');
-                $filename = time()."-".$user->id."-".$companyLogo->getClientOriginalName();
+                $filename = time() . "-" . $user->id . "-" . $companyLogo->getClientOriginalName();
                 $companyLogo->move(public_path('uploads/company_logo'), $filename);
                 $company->update(['company_logo' => 'uploads/company_logo/' . $filename]);
             }
@@ -564,29 +564,36 @@ class CompanyController extends Controller
     }
     public function getApps(Request $request)
     {
-
         try {
-            $user =   $request->user();
-          
+            $user = $request->user();
             $company = Company::with('jobs.applications')->find($user->company->id);
 
-          
             if (!$company) {
                 return response()->json([
                     "success" => false,
-                    "message" => "company not registerd"
+                    "message" => "company not registered"
                 ], 400);
             }
-    
+
             $allApplications = [];
-    
-       
+
             foreach ($company->jobs as $job) {
                 foreach ($job->applications as $application) {
+                    $jobseeker = $application->jobseeker;
+                    $jobseekerUser = $jobseeker ? $jobseeker->user : null;
+
                     $allApplications[] = [
                         'application_id' => $application->id,
                         'job_title' => $job->title,
-                        'jobseeker' => $application->jobseeker,
+                        'jobseeker' => [
+                            'id' => $jobseeker ? $jobseeker->id : null,
+                            'phone_number' => $jobseeker ? $jobseeker->phone_number : null,
+                            'about_me' => $jobseeker ? $jobseeker->about_me : null,
+                            'firstname' => $jobseekerUser ? $jobseekerUser->firstname : null,
+                            'lastname' => $jobseekerUser ? $jobseekerUser->lastname : null,
+                            'email' => $jobseekerUser ? $jobseekerUser->email : null,
+                            'address' => $jobseekerUser ? $jobseekerUser->address : null,
+                        ],
                         'status' => $application->status,
                         'cover_letter' => url($application->cover_letter),
                         'cv' => url($application->cv),
@@ -597,30 +604,24 @@ class CompanyController extends Controller
                     ];
                 }
             }
-    
-       
-          
+
             return response()->json([
                 "success" => true,
-
                 "applications" => $allApplications
-
             ], 200);
         } catch (ValidationException $e) {
             return response()->json([
                 "success" => false,
                 "message" => $e->errors(),
-
-
             ], 400);
         } catch (Exception $e) {
             return response()->json([
                 "success" => false,
                 "message" => $e->getMessage(),
-
             ], 400);
         }
     }
+
     public function getAllApp(Request $request, $jobid)
     {
         try {
@@ -649,7 +650,7 @@ class CompanyController extends Controller
 
                 ], 400);
             }
-            $apps->transform(function ($a){
+            $apps->transform(function ($a) {
                 $a->cv = url($a->cv);
                 $a->cover_letter = url($a->cover_letter);
                 return $a;
@@ -703,7 +704,7 @@ class CompanyController extends Controller
 
                 ], 400);
             }
-            $app->transform(function ($a){
+            $app->transform(function ($a) {
                 $a->cv = url($a->cv);
                 $a->cover_letter = url($a->cover_letter);
                 return $a;

@@ -151,8 +151,10 @@ class _ExplorePageState extends State<ExplorePage> {
                                           ),
                                           Row(
                                             children: [
-                                              Icon(Icons.timer,
-                                                  color: Colors.red, size: 15),
+                                              Image.asset(
+                                                "assets/icons/deadline.png",
+                                                width: 20
+                                              ),
                                               SizedBox(width: 5),
                                               Text(
                                                   "${jobs["deadline"] ?? "Not Provided"}",
@@ -265,23 +267,23 @@ class _ExplorePageState extends State<ExplorePage> {
                             ],
                           ),
                         SizedBox(height: 5),
-                        Text(title,
+                        Text("Title: $title",
                             style: GoogleFonts.poppins(
                                 fontSize: 20, fontWeight: FontWeight.w500)),
                         SizedBox(height: 5),
-                        Text(type,
+                        Text("Type: $type",
                             style: GoogleFonts.poppins(
                                 color: Colors.grey, fontSize: 16)),
                         SizedBox(height: 5),
-                        Text(city,
+                        Text("Location: $city",
                             style: GoogleFonts.poppins(
                                 color: Colors.black, fontSize: 16)),
                         SizedBox(height: 5),
-                        Text(salary,
+                        Text("Salary: $salary",
                             style: GoogleFonts.poppins(
                                 color: Colors.green, fontSize: 16)),
                         SizedBox(height: 5),
-                        Text(description,
+                        Text("Requirements: $description",
                             style: GoogleFonts.poppins(
                                 fontSize: 16, color: Colors.black87)),
                         SizedBox(height: 10),

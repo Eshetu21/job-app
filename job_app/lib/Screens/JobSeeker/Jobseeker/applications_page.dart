@@ -129,10 +129,14 @@ class _ApplicationPageState extends State<ApplicationPage> {
                                     Icon(
                                       applications["status"] == "Pending"
                                           ? Icons.pending
-                                          : Icons.check_circle,
+                                          : applications["status"] == "Accepted"
+                                              ? Icons.check_circle
+                                              : Icons.cancel,
                                       color: applications["status"] == "Pending"
                                           ? Colors.orange
-                                          : Colors.green,
+                                          : applications["status"] == "Accepted"
+                                              ? Colors.green
+                                              : Colors.red,
                                       size: 15,
                                     ),
                                     SizedBox(width: 5),

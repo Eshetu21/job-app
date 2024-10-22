@@ -35,7 +35,7 @@ class _ViewProfileState extends State<ViewProfile> {
                     decoration: BoxDecoration(
                         color: Colors.grey.withOpacity(0.5),
                         borderRadius: BorderRadius.circular(20)),
-                    margin: EdgeInsets.only(right: 20, top: 20),
+                    margin: EdgeInsets.only(right: 5, top: 20),
                     padding: EdgeInsets.all(16),
                     child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,

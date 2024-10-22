@@ -32,9 +32,7 @@ class _CompanyViewProfileState extends State<CompanyViewProfile> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Padding(
-                padding: EdgeInsets.all(15),
-                child: ViewProfile(applicant: widget.applicant)),
+            ViewProfile(applicant: widget.applicant),
             Card(
               margin: EdgeInsets.symmetric(vertical: 10),
               child: Padding(
